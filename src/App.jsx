@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
@@ -44,6 +45,8 @@ export default function App() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [messageSent, setMessageSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const scrollToContact = (event) => {
     event.preventDefault();
@@ -61,16 +64,50 @@ export default function App() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    setMessageSent(true);
-    setFormData({
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      interest: "",
-      message: "",
-    });
-    setTimeout(() => setMessageSent(false), 3000);
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setSubmitError("Email is not configured yet. Add EmailJS keys in .env to enable sending.");
+      return;
+    }
+
+    setIsSending(true);
+    setSubmitError("");
+
+    emailjs
+      .send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name || "Website visitor",
+          company: formData.company || "Not provided",
+          email: formData.email || "Not provided",
+          phone: formData.phone || "Not provided",
+          interest: formData.interest || "General enquiry",
+          message: formData.message || "No message provided",
+        },
+        { publicKey }
+      )
+      .then(() => {
+        setMessageSent(true);
+        setFormData({
+          name: "",
+          company: "",
+          email: "",
+          phone: "",
+          interest: "",
+          message: "",
+        });
+        setTimeout(() => setMessageSent(false), 3000);
+      })
+      .catch(() => {
+        setSubmitError("Failed to send message. Please try again in a moment.");
+      })
+      .finally(() => {
+        setIsSending(false);
+      });
   };
 
   return (
@@ -91,7 +128,9 @@ export default function App() {
             <a href="#contact" className="transition-colors hover:text-[#ff6b35]">Contact</a>
           </div>
           <div className="hidden md:block">
-            <Button className="bg-[#ff6b35] text-white hover:bg-[#f15a22] text-xs h-8 px-3">Get Started</Button>
+            <Button asChild className="bg-[#ff6b35] text-white hover:bg-[#f15a22] text-xs h-8 px-3">
+              <a href="#contact" onClick={scrollToContact}>Contact Us</a>
+            </Button>
           </div>
           <button className="md:hidden text-sm" onClick={() => setMenuOpen((v) => !v)}>Menu</button>
         </div>
@@ -243,7 +282,7 @@ export default function App() {
                 <Mail className="size-4 text-[#ff6b35] mt-0.5" />
                 <div>
                   <p className="font-semibold">Email</p>
-                  <p className="text-[#ff6b35]">pankita@udaanfly.com</p>
+                  <p href="mailto:pankita.gala@gmail.com" className="text-[#ff6b35]">pankita.gala@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -278,10 +317,11 @@ export default function App() {
             <Textarea name="message" placeholder="Your Message" value={formData.message} onChange={onFieldChange} />
             <Button
               className={messageSent ? "w-full bg-green-600 hover:bg-green-600 text-white" : "w-full bg-[#ff6b35] hover:bg-[#f15a22] text-white"}
-              disabled={messageSent}
+              disabled={messageSent || isSending}
             >
-              {messageSent ? "✓ Message Sent!" : "Send Message"}
+              {isSending ? "Sending..." : messageSent ? "✓ Message Sent!" : "Send Message"}
             </Button>
+            {submitError ? <p className="text-sm text-red-600">{submitError}</p> : null}
           </form>
         </div>
       </section>
@@ -315,7 +355,7 @@ export default function App() {
             <div>
               <h4 className="text-xs font-semibold tracking-[0.08em] uppercase text-[#d1d5db] mb-4">Connect</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="mailto:pankita@udaanfly.com" className="transition-colors hover:text-[#ff6b35]">Email Us</a></li>
+                <li><a href="mailto:pankita.gala@gmail.com" className="transition-colors hover:text-[#ff6b35]">Email Us</a></li>
                 <li><a href="tel:+919821578960" className="transition-colors hover:text-[#ff6b35]">Call Us</a></li>
                 <li><a href="#" className="transition-colors hover:text-[#ff6b35]">Follow on Instagram</a></li>
                 <li><a href="#" className="transition-colors hover:text-[#ff6b35]">Connect on LinkedIn</a></li>
