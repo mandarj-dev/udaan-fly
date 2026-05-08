@@ -300,11 +300,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="flex gap-2 mt-6">
-              <Button size="icon" className="rounded-full bg-[#ff6b35] hover:bg-[#f15a22] text-xs">ig</Button>
-              <Button size="icon" className="rounded-full bg-[#ff6b35] hover:bg-[#f15a22] text-xs">in</Button>
-              <Button size="icon" className="rounded-full bg-[#ff6b35] hover:bg-[#f15a22] text-xs">f</Button>
-            </div>
           </div>
           <form className="space-y-3" onSubmit={onSubmit}>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -357,8 +352,6 @@ export default function App() {
               <ul className="space-y-2 text-sm">
                 <li><a href="mailto:pankita.gala@gmail.com" className="transition-colors hover:text-[#ff6b35]">Email Us</a></li>
                 <li><a href="tel:+919821578960" className="transition-colors hover:text-[#ff6b35]">Call Us</a></li>
-                <li><a href="#" className="transition-colors hover:text-[#ff6b35]">Follow on Instagram</a></li>
-                <li><a href="#" className="transition-colors hover:text-[#ff6b35]">Connect on LinkedIn</a></li>
               </ul>
             </div>
           </div>
