@@ -5,6 +5,9 @@ import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
+import logo from "./assets/udanLogo.jpg"
+import icici from "./assets/icici.png"
+import donear from "./assets/donear.png"
 
 const programs = [
   {
@@ -115,8 +118,9 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white/95 backdrop-blur transition-shadow duration-300">
         <div className="container h-16 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2">
-            <div className="size-8 rounded-md bg-[#ff6b35] text-white flex items-center justify-center font-semibold">U</div>
-            <span className="font-semibold text-xl">Udaanfly</span>
+            {/* <div className="size-8 rounded-md bg-[#ff6b35] text-white flex items-center justify-center font-semibold">U</div>
+            <span className="font-semibold text-xl">Udaanfly</span> */}
+            <img src={logo} alt="Udaanfly" width={120} />
           </a>
           <div
             className="hidden md:flex items-center gap-8 text-base text-[#2c2c2c]"
@@ -141,9 +145,8 @@ export default function App() {
           </button>
         </div>
         <div
-          className={`md:hidden border-t border-border bg-white overflow-hidden transition-all duration-300 ease-out ${
-            menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
+          className={`md:hidden border-t border-border bg-white overflow-hidden transition-all duration-300 ease-out ${menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+            }`}
         >
           <div className="container py-3 flex flex-col gap-3 text-sm">
             <a href="#about" onClick={() => setMenuOpen(false)} className="transition-colors duration-200 hover:text-[#ff6b35]">About Us</a>
@@ -269,8 +272,21 @@ export default function App() {
                   <p className="text-[#ff6b35] text-xs tracking-[0.2em] mb-3">★★★★★</p>
                   <p className="text-muted-foreground text-sm italic leading-6 mb-4">"{quote}"</p>
                   <hr className="border-border mb-3" />
-                  <p className="text-sm font-semibold">{role}</p>
-                  <p className="text-xs text-muted-foreground">{org}</p>
+                  <div className="flex justify-between">
+                    <div className="roling">
+                      <p className="text-sm font-semibold">{role}</p>
+                      <p className="text-xs text-muted-foreground">{org}</p>
+                    </div>
+                    {(org === "ICICI Prudential" || org === "Donear") && (
+                      <div className="logoCont">
+                        <img
+                          src={org === "ICICI Prudential" ? icici : donear}
+                          alt={org}
+                          className={org === "ICICI Prudential" ? "w-[140px]" : "w-[100px]"}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
