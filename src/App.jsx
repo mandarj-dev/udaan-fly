@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, ArrowRight, Menu, X } from "lucide-react";
-import emailjs from "@emailjs/browser";
+import { toast } from "sonner";
 import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
@@ -47,9 +47,7 @@ export default function App() {
   });
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [messageSent, setMessageSent] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [submitError, setSubmitError] = useState("");
 
   const scrollToContact = (event) => {
     event.preventDefault();
@@ -65,52 +63,52 @@ export default function App() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    if (!serviceId || !templateId || !publicKey) {
-      setSubmitError("Email is not configured yet. Add EmailJS keys in .env to enable sending.");
-      return;
-    }
+    const apiUrl =
+      import.meta.env.VITE_CAMPAIGN_API_URL ||
+      "https://app-adminapi.shipdelight.com/api/campaign/campaign-lead/uddanfly-campaign";
+    const apiToken = import.meta.env.VITE_CAMPAIGN_API_TOKEN || "UqfnkZYsrKLCUD4xligbxQ==";
 
     setIsSending(true);
-    setSubmitError("");
 
-    emailjs
-      .send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name || "Website visitor",
-          company: formData.company || "Not provided",
-          email: formData.email || "Not provided",
-          phone: formData.phone || "Not provided",
-          interest: formData.interest || "General enquiry",
-          message: formData.message || "No message provided",
+    try {
+      const campaignRes = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiToken}`,
         },
-        { publicKey }
-      )
-      .then(() => {
-        setMessageSent(true);
-        setFormData({
-          name: "",
-          company: "",
-          email: "",
-          phone: "",
-          interest: "",
-          message: "",
-        });
-        setTimeout(() => setMessageSent(false), 3000);
-      })
-      .catch(() => {
-        setSubmitError("Failed to send message. Please try again in a moment.");
-      })
-      .finally(() => {
-        setIsSending(false);
+        body: JSON.stringify({
+          full_name: formData.name.trim(),
+          company_email: formData.email.trim(),
+          company_name: formData.company.trim(),
+          phone_number: formData.phone.trim(),
+          message: formData.message.trim(),
+          program_type: formData.interest.trim(),
+        }),
       });
+
+      if (!campaignRes.ok) {
+        throw new Error("Campaign API request failed");
+      }
+
+      toast.success("Your message has been sent successfully!");
+      setFormData({
+        name: "",
+        company: "",
+        email: "",
+        phone: "",
+        interest: "",
+        message: "",
+      });
+    } catch {
+      toast.error("Failed to send your message. Please try again in a moment.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -367,20 +365,20 @@ export default function App() {
           </div>
           <form className="space-y-3" onSubmit={onSubmit}>
             <div className="grid sm:grid-cols-2 gap-3">
-              <Input name="name" placeholder="Your Name" value={formData.name} onChange={onFieldChange} required />
-              <Input name="company" placeholder="Company Name" value={formData.company} onChange={onFieldChange} />
+              <Input name="name" placeholder="Your Name *" value={formData.name} onChange={onFieldChange} required />
+              <Input name="company" placeholder="Company Name *" value={formData.company} onChange={onFieldChange} required />
             </div>
-            <Input name="email" type="email" placeholder="Email Address" value={formData.email} onChange={onFieldChange} required />
-            <Input name="phone" placeholder="Phone Number" value={formData.phone} onChange={onFieldChange} />
+            <Input name="email" type="email" placeholder="Email Address *" value={formData.email} onChange={onFieldChange} required />
+            <Input name="phone" type="tel" placeholder="Phone Number *" value={formData.phone} onChange={onFieldChange} required />
             <Input name="interest" placeholder="Program Type/Interest" value={formData.interest} onChange={onFieldChange} />
             <Textarea name="message" placeholder="Your Message" value={formData.message} onChange={onFieldChange} />
             <Button
-              className={messageSent ? "w-full bg-green-600 hover:bg-green-600 text-white" : "w-full bg-[#ff6b35] hover:bg-[#f15a22] text-white"}
-              disabled={messageSent || isSending}
+              type="submit"
+              className="w-full bg-[#ff6b35] hover:bg-[#f15a22] text-white"
+              disabled={isSending}
             >
-              {isSending ? "Sending..." : messageSent ? "✓ Message Sent!" : "Send Message"}
+              {isSending ? "Sending..." : "Send Message"}
             </Button>
-            {submitError ? <p className="text-sm text-red-600">{submitError}</p> : null}
           </form>
         </div>
       </section>
