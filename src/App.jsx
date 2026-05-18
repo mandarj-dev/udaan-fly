@@ -70,7 +70,7 @@ export default function App() {
 
     const apiUrl =
       import.meta.env.VITE_CAMPAIGN_API_URL ||
-      "https://app-adminapi.shipdelight.com/api/campaign/campaign-lead/uddanfly-campaign";
+      "https://app-adminapi-dev.shipdelight.com/api/campaign/campaign-lead/uddanfly-campaign";
     const apiToken = import.meta.env.VITE_CAMPAIGN_API_TOKEN || "UqfnkZYsrKLCUD4xligbxQ==";
 
     setIsSending(true);
@@ -282,7 +282,7 @@ export default function App() {
                         <img
                           src={org === "ICICI Prudential" ? icici : org === "Donear" ? donear : v3}
                           alt={org}
-                          className={org === "ICICI Prudential" ? "w-[140px]" : org === "Donear" ? "w-[100px]" : "w-[80px]"}
+                          className={org === "ICICI Prudential" ? "w-[140px]" : org === "Donear" ? "w-[100px]" : "w-[52px]"}
                         />
                       </div>
                     )}
