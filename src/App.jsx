@@ -6,8 +6,10 @@ import { Card, CardContent } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
 import logo from "./assets/udanLogo.jpg"
+import footerLogo from "./assets/udaan fly dark.png"
 import icici from "./assets/icici.png"
 import donear from "./assets/donear.png"
+import v3 from "./assets/v3.png"
 
 const programs = [
   {
@@ -275,12 +277,12 @@ export default function App() {
                       <p className="text-sm font-semibold">{role}</p>
                       <p className="text-xs text-muted-foreground">{org}</p>
                     </div>
-                    {(org === "ICICI Prudential" || org === "Donear") && (
+                    {(org === "ICICI Prudential" || org === "Donear" || org === "V3") && (
                       <div className="logoCont">
                         <img
-                          src={org === "ICICI Prudential" ? icici : donear}
+                          src={org === "ICICI Prudential" ? icici : org === "Donear" ? donear : v3}
                           alt={org}
-                          className={org === "ICICI Prudential" ? "w-[140px]" : "w-[100px]"}
+                          className={org === "ICICI Prudential" ? "w-[140px]" : org === "Donear" ? "w-[100px]" : "w-[80px]"}
                         />
                       </div>
                     )}
@@ -387,9 +389,7 @@ export default function App() {
         <div className="container">
           <div className="grid md:grid-cols-2 lg:grid-cols-[1.8fr_1fr_1fr_1fr] gap-10 pb-9 border-b border-white/10">
             <div>
-              <div className="size-8 rounded-md bg-[#ff6b35] text-white flex items-center justify-center font-semibold mb-3">U</div>
-              <div className="text-white font-semibold mb-2">Udaanfly</div>
-              <p className="text-sm">Creating happiness that connects and transforms organizations.</p>
+              <img src={footerLogo} alt="Udaanfly" className="w-[200px] mb-3" />
             </div>
             <div>
               <h4 className="text-xs font-semibold tracking-[0.08em] uppercase text-[#d1d5db] mb-4">Quick Links</h4>
