@@ -265,20 +265,20 @@ export default function App() {
 
       {/* logos marquee section */}
       <section className="py-12 bg-white border-y border-border/60 overflow-hidden relative">
-        {/* Decorative fading gradient overlays */}
-        <div className="absolute inset-y-0 left-0 w-20 sm:w-40 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-20 sm:w-40 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
-
         <div className="container px-4">
           <div className="text-center mb-8">
             <h2
-              className="text-[1.6rem] sm:text-[2rem] font-bold text-[#2c2c2c] tracking-tight relative inline-block"
+              className="text-[22px] sm:text-[2rem] font-bold text-[#2c2c2c] tracking-tight relative inline-block"
               style={{ fontFamily: "Poppins, sans-serif" }}>
               Trusted by Teams That Soar
             </h2>
           </div>
 
           <div className="relative w-full overflow-hidden py-6">
+            {/* Decorative fading gradient overlays */}
+            <div className="absolute inset-y-0 left-0 w-20 sm:w-40 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-20 sm:w-40 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+
             <div className="animate-marquee flex items-center gap-16 md:gap-24">
               {/* First loop of logos */}
               {clientLogos.map((logo, idx) => (
